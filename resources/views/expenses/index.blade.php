@@ -281,7 +281,7 @@
         
         $.ajax({
             type: "PUT",
-            url: "/expenses/" + id,
+            url: "expenses/" + id,
             data: $('#editForm').serialize(),
             success: function(response) {
                 // Handle success response

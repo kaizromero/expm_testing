@@ -179,7 +179,7 @@
         
         $.ajax({
             type:"PUT",
-            url: "/work/"+id,
+            url: "work/"+id,
             data: $('#editForm').serialize(),
             success: function(response){
                 

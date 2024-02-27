@@ -243,7 +243,7 @@
 
         $.ajax({
             type: "PUT",
-            url: "/expenses/" + id,
+            url: "expmtest/expenses/" + id,
             data: $('#editForm').serialize(),
             success: function(response) {
                 location.reload();

@@ -100,6 +100,15 @@ class ExpenseController extends Controller
     public function update(Request $request, $id)
     {
         //
+        $expenses = Expense::find($id);
+        $expenses->category_id = $request->input('txtCategoryName');
+        $expenses->user_id = Auth::id();
+        $expenses->details = $request->input('txtDetails');
+        $expenses->store = $request->input('txtStore');
+        $expenses->price = $request->input('txtPrice');
+        $expenses->remarks = $request->input('txtRemarks');
+        $expenses->date_of_pay = $request->input('txtDop');
+        $expenses->save();
     }
 
     /**
@@ -111,5 +120,8 @@ class ExpenseController extends Controller
     public function destroy($id)
     {
         //
+        $expenses = Expense::find($id);
+        $expenses->delete();
+        return redirect()->back(); 
     }
 }

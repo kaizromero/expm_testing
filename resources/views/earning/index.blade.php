@@ -59,7 +59,7 @@
                             @foreach($earnings as $earning)
                             <tr>
                                 <td>{{ $earning->id }}</td>
-                                <td>{{ $earning->work_id }}</td>
+                                <td>{{ $earning->work_name }}</td>
                                 <td>{{ $earning->pay }}</td>
                                 <td>{{ $earning->start_pay }}</td>
                                 <td>{{ $earning->end_pay }}</td>
@@ -109,9 +109,9 @@
                                                 </div>
                                         </div>
                                         <div class="form-group row">
-                                            <label for="inputEmail3" class="col-sm-2 col-form-label">Pay</label>
+                                            <label for="inputEmail3" class="col-sm-2 col-form-label">Pay (only digits)</label>
                                                 <div class="col-sm-10">
-                                                    <input type="text" class="form-control" name="txtPay" placeholder="">
+                                                    <input type="text" class="form-control" pattern="[0-9]*" name="txtPay" placeholder="">
                                                 </div>
                                         </div>
                                         <div class="form-group row">
@@ -226,6 +226,10 @@
     //     $(".modal-body #txtCategoryName").val(name);
     //     // console.log('modal');
     // });
+
+    document.querySelector('input[name="txtPay"]').addEventListener('input', function(event) {
+        this.value = this.value.replace(/[^0-9]/g, '');
+    });
 
   </script>
 

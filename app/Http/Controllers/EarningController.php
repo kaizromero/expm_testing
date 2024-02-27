@@ -23,8 +23,9 @@ class EarningController extends Controller
         ->where('user_id', Auth::id())
         ->get();
         $earnings = DB::table('earnings')
-        ->orderby('id', 'desc')
-        ->where('user_id', Auth::id())
+        ->leftjoin('work', 'work.id', '=', 'earnings.work_id')
+        ->orderby('earnings.id', 'desc')
+        ->where('earnings.user_id', Auth::id())
         ->get();
         
         return view('earning.index', compact('works', 'earnings'));
@@ -49,6 +50,8 @@ class EarningController extends Controller
     public function store(Request $request)
     {
         //
+
+
         Earning::create([
             'work_id' => $request->txtWorkName,
             'user_id' => Auth::id(),

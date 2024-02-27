@@ -72,7 +72,7 @@
                                 <td>{{ $expense->remarks }}</td>
                                 <td>{{ $expense->date_of_pay }}</td>
                                 <td>
-                                    <form action="{{route('category.destroy', [$expense->id])}}" method="post">
+                                    <form action="{{route('expenses.destroy', [$expense->id])}}" method="post">
                                         {{csrf_field()}}
                                         {{ method_field('DELETE') }}
                                         <button class="btn btn-warning" 
@@ -243,7 +243,7 @@
       var dop = button.data('dop');
       var date = new Date(dop);
       var mydate = (date.getFullYear() + '-' + ((date.getMonth() > 8) ? (date.getMonth() + 1) : ('0' + (date.getMonth() + 1))) + '-' + ((date.getDate() > 9) ? date.getDate() : ('0' + date.getDate())));
-      alert(mydate)
+    //   alert(mydate)
     $(".modal-body #txtCategoryName").val(cat);
       $(".modal-body #txtExpenseId").val(id);
       $(".modal-body #txtDetails").val(details);
@@ -277,27 +277,28 @@
     $('#editForm').on('submit', function(e) {
         e.preventDefault();
         
-        var id = $('#txtCategoryId').val();
+        var id = $('#txtExpenseId').val();
         
         $.ajax({
-            type:"PUT",
-            url: "/category/"+id,
+            type: "PUT",
+            url: "/expenses/" + id,
             data: $('#editForm').serialize(),
-            success: function(response){
-                
-                // $('#editDivision').modal('hide.bs.modal')
-                alert('data updated');
+            success: function(response) {
+                // Handle success response
+                console.log(response);
+                // Optionally, provide feedback to the user
+                alert('Expense updated successfully');
+                // Reload the page or update the UI
                 location.reload();
             },
             error: function(error) {
+                // Handle error response
                 console.log(error);
+                // Optionally, provide feedback to the user
+                alert('An error occurred while updating the expense');
             }
-        })
-        // $('#editDivision').modal('hide');
-        //     $('#editDivision').on('hide.bs.modal', function (e) {
-        //         console.log('ok');
-        //     });
-    })
+        });
+    });
 </script>
 @endsection
 

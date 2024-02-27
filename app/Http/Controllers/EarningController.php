@@ -23,6 +23,7 @@ class EarningController extends Controller
         ->where('user_id', Auth::id())
         ->get();
         $earnings = DB::table('earnings')
+        ->select('earnings.id AS id', 'work.id AS work_id', 'work.work_name', 'earnings.pay', 'earnings.start_pay', 'earnings.end_pay')
         ->leftjoin('work', 'work.id', '=', 'earnings.work_id')
         ->orderby('earnings.id', 'desc')
         ->where('earnings.user_id', Auth::id())
@@ -94,6 +95,13 @@ class EarningController extends Controller
     public function update(Request $request, $id)
     {
         //
+        $earnings = Earning::find($id);
+        $earnings->work_id = $request->input('txtWorkName');
+        $earnings->user_id = Auth::id();
+        $earnings->pay = $request->input('txtPay');
+        $earnings->start_pay = $request->input('txtSp');
+        $earnings->end_pay = $request->input('txtEp');
+        $earnings->save();
     }
 
     /**
@@ -105,5 +113,8 @@ class EarningController extends Controller
     public function destroy($id)
     {
         //
+        $earnings = Earning::find($id);
+        $earnings->delete();
+        return redirect()->back(); 
     }
 }

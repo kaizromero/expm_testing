@@ -145,44 +145,44 @@
                         <button class="btn-close" type="button" data-dismiss="modal" aria-label="Close"></button>
                         </div>
                         <form id="editForm">
-                        {!! csrf_field() !!}
-                        {{ method_field('PUT') }}
-                        <div class="modal-body">
-                            <div class="form-group row">
-                                <label for="inputEmail3" class="col-sm-3 col-form-label">Earning</label>
-                                    <div class="col-sm-10">
-                                        <select class="form-select form-select-sm" aria-label=".form-select-sm example" id="txtWorkName" name="txtWorkName" required="true">
-                                            <option value="0" selected>Open this select menu</option>
-                                            @foreach($works as $work)
-                                                <option value="{{ $work->id }}">{{ $work->work_name }}</option>
-                                            @endforeach
-                                          </select>
-                                    </div>
+                            {!! csrf_field() !!}
+                            {{ method_field('PUT') }}
+                            <div class="modal-body">
+                                <div class="form-group row">
+                                    <label for="inputEmail3" class="col-sm-3 col-form-label">Earning</label>
+                                        <div class="col-sm-10">
+                                            <select class="form-select form-select-sm" aria-label=".form-select-sm example" id="txtWorkName" name="txtWorkName" required="true">
+                                                <option value="0" selected>Open this select menu</option>
+                                                @foreach($works as $work)
+                                                    <option value="{{ $work->id }}">{{ $work->work_name }}</option>
+                                                @endforeach
+                                            </select>
+                                        </div>
+                                </div>
+                                <div class="form-group row">
+                                    <label for="inputEmail3" class="col-sm-2 col-form-label">Pay</label>
+                                        <div class="col-sm-10">
+                                            <input type="text" class="form-control" name="txtPay" id="txtPay" placeholder="">
+                                            <input type="hidden" class="form-control" name="txtEarningId" id="txtEarningId" placeholder="">
+                                        </div>
+                                </div>
+                                <div class="form-group row">
+                                    <label for="inputEmail3" class="col-sm-2 col-form-label">Start of Pay</label>
+                                        <div class="col-sm-10">
+                                            <input type="date" class="form-control" name="txtSp" id="txtSp" placeholder="">
+                                        </div>
+                                </div>
+                                <div class="form-group row">
+                                    <label for="inputEmail3" class="col-sm-2 col-form-label">End of Pay</label>
+                                        <div class="col-sm-10">
+                                            <input type="date" class="form-control" name="txtEp" id="txtEp" placeholder="">
+                                        </div>
+                                </div>
                             </div>
-                            <div class="form-group row">
-                                <label for="inputEmail3" class="col-sm-2 col-form-label">Pay</label>
-                                    <div class="col-sm-10">
-                                        <input type="text" class="form-control" name="txtPay" id="txtPay" placeholder="">
-                                        <input type="hidden" class="form-control" name="txtEarningId" id="txtEarningId" placeholder="">
-                                    </div>
+                            <div class="modal-footer">
+                                <button class="btn btn-primary" type="button" data-dismiss="modal">Close</button>
+                                <button class="btn btn-secondary" type="submit">Save changes</button>
                             </div>
-                            <div class="form-group row">
-                                <label for="inputEmail3" class="col-sm-2 col-form-label">Start of Pay</label>
-                                    <div class="col-sm-10">
-                                        <input type="date" class="form-control" name="txtSp" id="txtSp" placeholder="">
-                                    </div>
-                            </div>
-                            <div class="form-group row">
-                                <label for="inputEmail3" class="col-sm-2 col-form-label">End of Pay</label>
-                                    <div class="col-sm-10">
-                                        <input type="date" class="form-control" name="txtEp" id="txtEp" placeholder="">
-                                    </div>
-                            </div>
-                        </div>
-                        <div class="modal-footer">
-                            <button class="btn btn-primary" type="button" data-dismiss="modal">Close</button>
-                            <button class="btn btn-secondary" type="submit">Save changes</button>
-                        </div>
                         </form>
                     </div>
                     </div>
@@ -196,7 +196,7 @@
 <!-- /.container-fluid -->
 <script>
     $('#editExpense').on('show.bs.modal', function (event) {
-  
+   
       var button = $(event.relatedTarget)
       var id = button.data('id');
       var work = button.data('work');
@@ -207,6 +207,7 @@
       var start_date = (pay_start.getFullYear() + '-' + ((pay_start.getMonth() > 8) ? (pay_start.getMonth() + 1) : ('0' + (pay_start.getMonth() + 1))) + '-' + ((pay_start.getDate() > 9) ? pay_start.getDate() : ('0' + pay_start.getDate())));
     //   alert(start_date)
       var end_date = (pay_end.getFullYear() + '-' + ((pay_end.getMonth() > 8) ? (pay_end.getMonth() + 1) : ('0' + (pay_end.getMonth() + 1))) + '-' + ((pay_end.getDate() > 9) ? pay_end.getDate() : ('0' + pay_end.getDate())));
+      $(".modal-body #txtEarningId").val(id);
       $(".modal-body #txtWorkName").val(work);
       $(".modal-body #txtPay").val(pay);
       $(".modal-body #txtSp").val(start_date);
@@ -236,32 +237,22 @@
   
 
 <script>
-  
-  
-    $('#editForm').on('submit', function(e) {
+  $('#editForm').on('submit', function(e) {
         e.preventDefault();
-        
-        var id = $('#txtCategoryId').val();
-        
+        var id = $('#txtEarningId').val();
+
         $.ajax({
-            type:"PUT",
-            url: "/earning/"+id,
+            type: "PUT",
+            url: `/earning/${id}`,
             data: $('#editForm').serialize(),
-            success: function(response){
-                
-                // $('#editDivision').modal('hide.bs.modal')
-                alert('data updated');
+            success: function(response) {
                 location.reload();
             },
             error: function(error) {
                 console.log(error);
             }
-        })
-        // $('#editDivision').modal('hide');
-        //     $('#editDivision').on('hide.bs.modal', function (e) {
-        //         console.log('ok');
-        //     });
-    })
+        });
+    });
 </script>
 @endsection
 

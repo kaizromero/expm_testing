@@ -1,5 +1,11 @@
 @extends('layouts.app')
 
+@section('style')
+
+<link rel="stylesheet" type="text/css" href="{{asset('https://cdn.datatables.net/1.12.1/css/dataTables.bootstrap4.min.css')}}">
+
+@endsection
+
 @section('content')
 <div class="container-fluid">
 
@@ -10,9 +16,29 @@
                 class="fas fa-download fa-sm text-white-50"></i> Generate Report</a>
     </div> --}}
 
+    <div class="row">
+        <div class="col-lg-6">
+            <div class="card mb-4">
+                <div class="card-header py-3">
+                    <h6 class="m-0 font-weight-bold text-primary">Dashboard</h6>
+                </div>
+                <div class="card-body">
+                    Change Year
+                    <select id="year-select" class="form-select form-select-lg mb-3" aria-label=".form-select-lg example">
+                        <option selected value="2022">2022</option>
+                        <option value="2023">2023</option>
+                        <option value="2024">2024</option>
+                    </select>
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-6">
+
+        </div>
+    </div>
+
     <!-- Content Row -->
     <div class="row">
-
         <!-- Earnings (Monthly) Card Example -->
         <div class="col-xl-3 col-md-6 mb-4">
             <div class="card border-left-primary shadow h-100 py-2">
@@ -20,8 +46,8 @@
                     <div class="row no-gutters align-items-center">
                         <div class="col mr-2">
                             <div class="text-xs font-weight-bold text-primary text-uppercase mb-1">
-                                2022 Rent</div>
-                            <div class="h5 mb-0 font-weight-bold text-gray-800">${{ number_format($total_rent[0]->total_price, 2) }}</div>
+                                <span  class="year-label" >2022</span> Rent</div>
+                            <div id="total-rent" class="h5 mb-0 font-weight-bold text-gray-800">${{ number_format($total_rent[0]->total_price, 2) }}</div>
                         </div>
                         <div class="col-auto">
                             <i class="fas fa-house-user fa-fw fa-2x text-gray-300"></i>
@@ -38,8 +64,8 @@
                     <div class="row no-gutters align-items-center">
                         <div class="col mr-2">
                             <div class="text-xs font-weight-bold text-success text-uppercase mb-1">
-                                2022 Total Earnings</div>
-                            <div class="h5 mb-0 font-weight-bold text-gray-800">${{ number_format($total_earnings[0]->pay, 2) }}</div>
+                                <span  class="year-label" >2022</span> Total Earnings</div>
+                            <div id="total-earnings" class="h5 mb-0 font-weight-bold text-gray-800">${{ number_format($total_earnings[0]->pay, 2) }}</div>
                         </div>
                         <div class="col-auto">
                             <i class="fas fa-dollar-sign fa-2x text-gray-300"></i>
@@ -55,11 +81,11 @@
                 <div class="card-body">
                     <div class="row no-gutters align-items-center">
                         <div class="col mr-2">
-                            <div class="text-xs font-weight-bold text-info text-uppercase mb-1">2022 Total Expenses
+                            <div class="text-xs font-weight-bold text-info text-uppercase mb-1"><span  class="year-label" >2022</span> Total Expenses
                             </div>
                             <div class="row no-gutters align-items-center">
                                 <div class="col-auto">
-                                    <div class="h5 mb-0 mr-3 font-weight-bold text-gray-800">${{ number_format($total_expenses[0]->price, 2) }}</div>
+                                    <div id="total-expenses"  class="h5 mb-0 mr-3 font-weight-bold text-gray-800">${{ number_format($total_expenses[0]->price, 2) }}</div>
                                 </div>
                                 <div class="col">
                                     <div class="progress progress-sm mr-2">
@@ -141,6 +167,29 @@
                     </div>
                 </div>
             </div>
+            <div class="card shadow mb-4">
+                <div class="card-header py-3">
+                    <h6 class="m-0 font-weight-bold text-primary"><span  class="year-label" >2022</span> Weekly Cashflow</h6>
+                </div>
+                <div class="card-body">
+                    <table class="cashflow-table table">
+                        <thead>
+                            <th>Week</th>
+                            <th>Earnings</th>
+                            <th>Expenses</th>
+                        </thead>
+                        <tbody id="cashFlow">
+                            @foreach($weekly_exps as $weekly_exp)
+                            <tr>
+                                <td>{{$weekly_exp->weeks}}</td>
+                                <td>{{number_format($weekly_exp->earnings, 2)}}</td>
+                                <td>{{number_format($weekly_exp->expenses, 2)}}</td>
+                            </tr>
+                            @endforeach
+                        </tbody>
+                    </table>
+                </div>
+            </div>
             
         </div>
 
@@ -179,7 +228,7 @@
                 <!-- Card Header - Dropdown -->
                 <div
                     class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
-                    <h6 class="m-0 font-weight-bold text-primary">2022 Total Expenses Allocation</h6>
+                    <h6 class="m-0 font-weight-bold text-primary"><span  class="year-label" >2022</span> Total Expenses Allocation</h6>
                     <div class="dropdown no-arrow">
                         <a class="dropdown-toggle" href="#" role="button" id="dropdownMenuLink"
                             data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
@@ -202,51 +251,11 @@
                             <th>Category</th>
                             <th>Price</th>
                         </thead>
-                        <tbody>
+                        <tbody id="tableBody">
                             @foreach($total_exp_rankings as $total_exp_ranking)
                             <tr>
                                 <td>{{$total_exp_ranking->category_name}}</td>
                                 <td>{{number_format($total_exp_ranking->price, 2)}}</td>
-                            </tr>
-                            @endforeach
-                        </tbody>
-                    </table>
-                </div>
-            </div>
-            <div class="card shadow mb-4">
-                <!-- Card Header - Dropdown -->
-                <div
-                    class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
-                    <h6 class="m-0 font-weight-bold text-primary">2022 Weekly Cashflow</h6>
-                    <div class="dropdown no-arrow">
-                        <a class="dropdown-toggle" href="#" role="button" id="dropdownMenuLink"
-                            data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                            <i class="fas fa-ellipsis-v fa-sm fa-fw text-gray-400"></i>
-                        </a>
-                        <div class="dropdown-menu dropdown-menu-right shadow animated--fade-in"
-                            aria-labelledby="dropdownMenuLink">
-                            <div class="dropdown-header">Dropdown Header:</div>
-                            <a class="dropdown-item" href="#">Action</a>
-                            <a class="dropdown-item" href="#">Another action</a>
-                            <div class="dropdown-divider"></div>
-                            <a class="dropdown-item" href="#">Something else here</a>
-                        </div>
-                    </div>
-                </div>
-                <!-- Card Body -->
-                <div class="card-body">
-                    <table class="table">
-                        <thead>
-                            <th>Week</th>
-                            <th>Earnings</th>
-                            <th>Expenses</th>
-                        </thead>
-                        <tbody>
-                            @foreach($weekly_exps as $weekly_exp)
-                            <tr>
-                                <td>{{$weekly_exp->weeks}}</td>
-                                <td>{{number_format($weekly_exp->earnings, 2)}}</td>
-                                <td>{{number_format($weekly_exp->expenses, 2)}}</td>
                             </tr>
                             @endforeach
                         </tbody>
@@ -266,6 +275,112 @@
 
 @section('javascript')
 <script>
+
+    document.getElementById('year-select').addEventListener('change', function() {
+        let year = this.value;
+        // alert(year)
+
+        fetch(`/totalMetrics/${year}`)
+            .then(response => response.json())
+            .then(data => {
+                
+                document.querySelectorAll('.year-label').forEach(element => {
+                    element.textContent = year;
+                });
+
+                document.getElementById('total-rent').textContent = data.total_rent;
+                document.getElementById('total-earnings').textContent = data.total_earnings;
+                document.getElementById('total-expenses').textContent = data.total_expenses;
+
+                // console.log(data.annual_earnings_values)
+                // console.log(data.annual_earnings_labels)
+                var ctx = document.getElementById("myAreaChart");
+                let chardata =  JSON.parse(data.annual_earnings_values) ;
+                let label = JSON.parse(data.annual_earnings_labels);
+
+                let pie_data = JSON.parse(data.annual_exp_allocation_data);
+                let pie_label = data.annual_exp_allocation_labels;
+
+                let bar_chart_data = JSON.parse(data.bar_chart_array);
+                
+                let exp_rankings = data.total_exp_rankings;
+
+                let weekly_exps = data.weekly_exps;
+
+                console.log(weekly_exps)
+                
+                // console.log(exp_rankings)
+                // console.log(data.total_exp_rankings)
+                // console.log(data.total_exp_rankings.category_name)
+                // console.log(bar_chart_data.annual_rent_exp_value);
+                // console.log(bar_chart_data.annual_transportation_exp_value);
+                // console.log(bar_chart_data);
+                // console.log(data.bar_chart_array[1]);
+                // console.log(data.bar_chart_array.annual_earnings_values);
+
+                // console.log(pie_data)
+                // console.log(pie_label)
+
+
+                myLineChart.data.labels = label;
+                myLineChart.data.datasets[0].data = chardata;
+                myLineChart.update();
+                
+                
+                myPieChart.data.labels = pie_label;
+                myPieChart.data.datasets[0].data = pie_data;
+                myPieChart.update();
+
+                myBarChart.data.datasets[0].data = bar_chart_data.annual_rent_exp_value;
+                myBarChart.data.datasets[1].data = bar_chart_data.annual_transportation_exp_value;
+                myBarChart.data.datasets[2].data = bar_chart_data.annual_food_exp_value;
+                myBarChart.data.datasets[3].data = bar_chart_data.annual_grocery_exp_value;
+                myBarChart.data.datasets[4].data = bar_chart_data.annual_entertainment_exp_value;
+                myBarChart.data.datasets[5].data = bar_chart_data.annual_tuition_exp_value;
+                myBarChart.data.datasets[6].data = bar_chart_data.annual_medicine_exp_value;
+                myBarChart.data.datasets[7].data = bar_chart_data.annual_communication_exp_value;
+                myBarChart.data.datasets[8].data = bar_chart_data.annual_clothes_exp_value;
+                myBarChart.data.datasets[9].data = bar_chart_data.annual_gadgets_exp_value;
+                myBarChart.data.datasets[10].data = bar_chart_data.annual_transfer_exp_value;
+                myBarChart.data.datasets[11].data = bar_chart_data.annual_training_exp_value;
+                myBarChart.data.datasets[12].data = bar_chart_data.annual_personal_care_exp_value;
+                myBarChart.data.datasets[13].data = bar_chart_data.annual_others_exp_value;
+                myBarChart.data.datasets[14].data = bar_chart_data.annual_school_fee_exp_value;
+                myBarChart.update();
+
+
+                const options = { style: 'currency', currency: 'USD' };
+                const numberFormat = new Intl.NumberFormat('en-US', options);
+
+                // Clear existing rows
+                tableBody.innerHTML = '';
+                // Add new rows based on the fetched data
+                exp_rankings.forEach(expense => {
+                    const row = document.createElement('tr');
+                    row.innerHTML = `
+                        <td>${expense.category_name}</td>
+                        <td>${numberFormat.format(expense.price)}</td>
+                    `;
+                    tableBody.appendChild(row);
+                });
+
+                // Clear existing rows
+                cashFlow.innerHTML = '';
+                // Add new rows based on the fetched data
+                weekly_exps.forEach(weekly_exp => {
+                    const row = document.createElement('tr');
+                    row.innerHTML = `
+                        <td>${weekly_exp.weeks}</td>
+                        <td>${numberFormat.format(weekly_exp.earnings)}</td>
+                        <td>${numberFormat.format(weekly_exp.expenses)}</td>
+                    `;
+                    cashFlow.appendChild(row);
+                });
+            });
+    });
+
+
+
         // Set new default font family and font color to mimic Bootstrap's default styling
     Chart.defaults.global.defaultFontFamily = 'Nunito', '-apple-system,system-ui,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif';
     Chart.defaults.global.defaultFontColor = '#858796';
@@ -300,7 +415,7 @@
     var data = {{ $annual_earnings_values }};
     let label = {{ $annual_earnings_labels }};
 
-    console.log(label, data)
+    // console.log(label, data)
     var myLineChart = new Chart(ctx, {
     type: 'line',
     data: {
@@ -427,7 +542,7 @@
     //rent
     
     let bar_chart_array = {!! $bar_chart_array !!};
-    console.log(bar_chart_array)
+    // console.log(bar_chart_array)
     var myBarChart = new Chart(ctx, {
     type: 'bar',
     data: {
@@ -625,6 +740,9 @@ var ctx = document.getElementById("myPieChart");
 // console.log({{ $annual_exp_allocation_labels }})
 var labels = {!!  $annual_exp_allocation_labels   !!};
 var data = {{  $annual_exp_allocation_data  }};
+
+// console.log(labels)
+// console.log(data)
 var myPieChart = new Chart(ctx, {
   type: 'pie',
   data: {
@@ -658,3 +776,5 @@ var myPieChart = new Chart(ctx, {
 
 </script>
 @endsection
+
+

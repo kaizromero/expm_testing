@@ -27,5 +27,5 @@ Route::middleware(['auth'])->group(function () {
     Route::resource('user', 'UserController');
     Route::post('multi', 'MultiExpenseController@store')->name('multi.store');
 
-    Route::get('/expmtest/totalMetrics/{year}', 'HomeController@totalMetrics');
+    Route::get('totalMetrics/{year}', 'HomeController@totalMetrics');
 });

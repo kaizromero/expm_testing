@@ -280,7 +280,7 @@
         let year = this.value;
         // alert(year)
 
-        fetch(`/totalMetrics/${year}`)
+        fetch(`expmtest/totalMetrics/${year}`)
             .then(response => response.json())
             .then(data => {
                 

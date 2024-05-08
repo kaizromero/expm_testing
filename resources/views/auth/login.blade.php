@@ -46,7 +46,7 @@
                                     <form class="user"  method="POST" action="{{ route('login') }}">
                                         @csrf
                                         <div class="form-group">
-                                            <input type="email" class="form-control form-control-user @error('email') is-invalid @enderror" id="exampleInputEmail"   name="email" value="test@gmail.com" required autocomplete="email" autofocus placeholder="Email">
+                                            <input type="email" class="form-control form-control-user @error('email') is-invalid @enderror" id="exampleInputEmail"   name="email" value="" required autocomplete="email" autofocus placeholder="Email">
 
                                             @error('email')
                                                 <span class="invalid-feedback" role="alert">
@@ -55,7 +55,7 @@
                                             @enderror
                                         </div>
                                         <div class="form-group">
-                                            <input type="password" class="form-control form-control-user @error('password') is-invalid @enderror" name="password" value="testing123" required autocomplete="current-password" placeholder="Password">
+                                            <input type="password" class="form-control form-control-user @error('password') is-invalid @enderror" name="password" value="" required autocomplete="current-password" placeholder="Password">
 
                                             @error('password')
                                                 <span class="invalid-feedback" role="alert">
@@ -80,7 +80,7 @@
                                     </form>
                                     <hr>
                                     <div class="text-center">
-                                        <a class="small" href="{{ route('register') }}">Register</a>
+                                        <a class="small" href="{{ route('register') }}">Sign Up</a>
                                     </div>
                                     {{-- <div class="text-center">
                                         <a class="small" href="register.html">Create an Account!</a>
